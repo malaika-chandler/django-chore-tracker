@@ -1,0 +1,23 @@
+{% extends "chores_list/chores_list_base.html" %}
+
+{% block body_block %}
+
+<div class="jumbotron">
+    <h2>Chore details:</h2>
+    <p>Name: {{ chore.name }}</p>
+    <p>Description: {{ chore.description }}</p>
+    <p>Repeats?: {{ chore.repeats }}</p>
+    {% if chore.repeats %}
+        <h3>Repetitions:</h3>
+        {% for chore_interval in chore.chore_intervals.all %}
+            <p>{{ student.name }} who is {{ student.age }} years old</p>
+        {% endfor %}
+    {% endif %}
+</div>
+
+<div class="container">
+    <p><a class="btn btn-warning" href="{% url 'chores_list:update' pk=chore.pk %}">Update</a></p>
+    <p><a class="btn btn-danger" href="{% url 'chores_list:delete' pk=chore.pk %}">Delete</a></p>
+</div>
+
+{% endblock %}

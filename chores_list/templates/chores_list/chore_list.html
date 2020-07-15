@@ -1,0 +1,12 @@
+{% extends "chores_list/chores_list_base.html" %}
+
+{% block body_block %}
+
+<h1>Chores</h1>
+<ul>
+    {% for chore in chore_list %}
+    <h2><li><a href="{{ chore.id }}">{{ chore.name }}</a></li></h2>
+    {% endfor %}
+</ul>
+
+{% endblock %}
