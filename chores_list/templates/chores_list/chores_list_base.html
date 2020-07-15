@@ -20,12 +20,11 @@
 
         <ul class="nav navbar-nav navbar-right">
             {% if user.is_authenticated %}
-<!--            <li class="nav-item"><a class="nav-link" href="{% url 'chores_list:chore_new' %}">New Post</a></li>-->
-<!--            <li class="nav-item"><a class="nav-link" href="{% url 'chores_list:_draft_list' %}">Drafts</a></li>-->
-<!--            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>-->
-<!--            <li class="nav-item"><a>Welcome, {{ user.username }}</a></li>-->
+            <li class="nav-item"><a class="nav-link" href="{% url 'chores_list:chore_new' %}">New Chore</a></li>
+            <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
+            <li class="nav-item"><a>Welcome, {{ user.username }}</a></li>
             {% else %}
-<!--            <li class="nav-item"><a class="nav-link navbar-right" href="{% url 'login' %}"><span>Login</span></a></li>-->
+            <li class="nav-item"><a class="nav-link navbar-right" href="{% url 'login' %}"><span>Login</span></a></li>
             {% endif %}
         </ul>
     </div>

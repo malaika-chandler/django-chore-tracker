@@ -9,14 +9,14 @@ class Chore(models.Model):
     repeats = models.BooleanField(default=True)
     count_repetitions = models.PositiveIntegerField(default=0)
     completed = models.BooleanField(default=False)
-    last_completed_by = models.ForeignKey('auth.User', on_delete=models.DO_NOTHING)
-    last_completed_on = models.DateTimeField()
+    last_completed_by = models.ForeignKey('auth.User', blank=True, null=True, on_delete=models.DO_NOTHING)
+    last_completed_on = models.DateTimeField(blank=True, null=True)
 
     def __str__(self):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("chores_list:detail", kwargs={'pk': self.pk})
+        return reverse("chores_list:chore_detail", kwargs={'pk': self.pk})
 
     def mark_completed(self):
         pass
@@ -33,6 +33,6 @@ class ChoreInterval(models.Model):
     repeat_minute_of_hour = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        starts = self.repeat_start.date().isoformat(' ')
-        td = timedelta(seconds=(self.repeat_interval.value_from_object(self.repeat_interval)))
-        return "Starting {}, repeating every {}".format(starts, repr(td))
+        starts = self.repeat_start.date().isoformat()
+        td = timedelta(seconds=(self.repeat_interval))
+        return "Starting {}, repeating every {}".format(starts, str(td))

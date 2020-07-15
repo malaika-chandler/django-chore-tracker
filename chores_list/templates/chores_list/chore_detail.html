@@ -10,14 +10,14 @@
     {% if chore.repeats %}
         <h3>Repetitions:</h3>
         {% for chore_interval in chore.chore_intervals.all %}
-            <p>{{ student.name }} who is {{ student.age }} years old</p>
+            <p>{{ chore_interval }}</p>
         {% endfor %}
     {% endif %}
 </div>
 
 <div class="container">
-    <p><a class="btn btn-warning" href="{% url 'chores_list:update' pk=chore.pk %}">Update</a></p>
-    <p><a class="btn btn-danger" href="{% url 'chores_list:delete' pk=chore.pk %}">Delete</a></p>
+    <p><a class="btn btn-warning" href="{% url 'chores_list:chore_edit' pk=chore.pk %}">Edit</a></p>
+    <p><a class="btn btn-danger" href="{% url 'chores_list:chore_remove' pk=chore.pk %}">Remove</a></p>
 </div>
 
 {% endblock %}
