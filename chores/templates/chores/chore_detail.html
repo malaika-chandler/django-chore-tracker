@@ -1,6 +1,6 @@
-{% extends "chores_list/chores_list_base.html" %}
+{% extends "chores/chores_base.html" %}
 
-{% block body_block %}
+{% block chore_content %}
 
 <div class="jumbotron">
     <h2>Chore details:</h2>
@@ -16,8 +16,8 @@
 </div>
 
 <div class="container">
-    <p><a class="btn btn-warning" href="{% url 'chores_list:chore_edit' pk=chore.pk %}">Edit</a></p>
-    <p><a class="btn btn-danger" href="{% url 'chores_list:chore_remove' pk=chore.pk %}">Remove</a></p>
+    <p><a class="btn btn-warning" href="{% url 'chores:chore_edit' pk=chore.pk %}">Edit</a></p>
+    <p><a class="btn btn-danger" href="{% url 'chores:chore_remove' pk=chore.pk %}">Remove</a></p>
 </div>
 
 {% endblock %}

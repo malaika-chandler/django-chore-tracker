@@ -1,0 +1,17 @@
+{% extends 'chores/chores_base.html' %}
+{% block chore_content %}
+
+<h2>New Chore</h2>
+
+{% if form.errors %}
+<p>Something has gone wrong.</p>
+{% endif %}
+
+<form method="post">
+    {% csrf_token %}
+    {{ form.as_p }}
+    {{ form2.as_p }}
+    <button type="submit" class="save btn btn-primary">Save</button>
+</form>
+
+{% endblock %}

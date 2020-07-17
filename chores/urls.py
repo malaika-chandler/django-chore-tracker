@@ -1,7 +1,7 @@
 from django.conf.urls import url
-from chores_list import views
+from chores import views
 
-app_name = 'chores_list'
+app_name = 'chores'
 
 urlpatterns = [
     url(r'^$', views.ChoreListView.as_view(), name='chore_list'),

@@ -1,6 +1,6 @@
 from django.db import models
 from django.urls import reverse
-from datetime import timedelta
+from django.utils import timezone
 
 
 class Chore(models.Model):
@@ -16,23 +16,33 @@ class Chore(models.Model):
         return self.name
 
     def get_absolute_url(self):
-        return reverse("chores_list:chore_detail", kwargs={'pk': self.pk})
+        return reverse("chores:chore_detail", kwargs={'pk': self.pk})
 
     def mark_completed(self):
         pass
 
 
 class ChoreInterval(models.Model):
+
     chore = models.ForeignKey(Chore, related_name='chore_intervals', on_delete=models.CASCADE)
-    repeat_start = models.DateTimeField(auto_now_add=True)
-    repeat_interval = models.IntegerField(blank=True, null=True)
-    repeat_day_of_year = models.IntegerField(blank=True, null=True)
-    repeat_day_of_month = models.IntegerField(blank=True, null=True)
-    repeat_day_of_week = models.IntegerField(blank=True, null=True)
-    repeat_hour_of_day = models.IntegerField(blank=True, null=True)
-    repeat_minute_of_hour = models.IntegerField(blank=True, null=True)
+
+    class IntervalChoice(models.TextChoices):
+        DAILY = 'daily'
+        WEEKLY = 'weekly'
+        WEEK_DAILY = 'week daily'
+        MONTHLY = 'monthly'
+        YEARLY = 'yearly'
+        CUSTOM = 'custom'
+
+    repeat_start = models.DateTimeField(default=timezone.now)
+    repeat_interval = models.CharField(choices=IntervalChoice.choices, max_length=10, default=IntervalChoice.DAILY)
+    repeat_custom_interval = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         starts = self.repeat_start.date().isoformat()
-        td = timedelta(seconds=(self.repeat_interval))
-        return "Starting {}, repeating every {}".format(starts, str(td))
+        if self.repeat_interval != ChoreInterval.IntervalChoice.CUSTOM:
+            interval = self.repeat_interval
+        else:
+            interval = 'every {} seconds'.format(self.repeat_custom_interval)
+
+        return "Starting {}, repeating {}".format(starts, interval)

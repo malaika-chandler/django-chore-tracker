@@ -1,6 +1,5 @@
 from django import forms
-from django.utils import timezone
-from chores_list.models import Chore, ChoreInterval
+from chores.models import Chore, ChoreInterval
 
 
 class ChoreForm(forms.ModelForm):
@@ -20,9 +19,10 @@ class ChoreIntervalForm(forms.ModelForm):
 
     class Meta:
         model = ChoreInterval
-        fields = ('repeat_interval', 'repeat_day_of_year')
+        fields = ('repeat_start', 'repeat_interval', 'repeat_custom_interval')
 
         widgets = {
-            'repeat_interval': forms.DateTimeInput(),
-            'repeat_day_of_the_year': forms.NumberInput(),
+            'repeat_start': forms.SplitDateTimeWidget(),
+            'repeat_interval': forms.RadioSelect(),
+            'repeat_custom_interval': forms.NumberInput(),
         }
