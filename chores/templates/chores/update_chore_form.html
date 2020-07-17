@@ -10,8 +10,22 @@
 
 <form method="post">
     {% csrf_token %}
-    {% bootstrap_form form %}
-    {% bootstrap_form form2 %}
+    {% bootstrap_form chore_form %}
+    <div id="intervalDetails">
+        {% bootstrap_form interval_form %}
+    </div>
     <button type="submit" class="save btn btn-primary">Save</button>
 </form>
+
+<script language="JavaScript">
+
+    $("#choreRepeatsCheckbox").change(function(){
+        if ($(this).is(":checked")) {
+            $("#intervalDetails").show()
+        } else {
+            $("#intervalDetails").hide()
+        }
+    }).change();
+
+</script>
 {% endblock %}
