@@ -1,6 +1,7 @@
 {% extends 'chores/chores_base.html' %}
-{% block chore_content %}
+{% load bootstrap3 %}
 
+{% block chore_content %}
 <h2>New Chore</h2>
 
 {% if form.errors %}
@@ -9,9 +10,8 @@
 
 <form method="post">
     {% csrf_token %}
-    {{ form.as_p }}
-    {{ form2.as_p }}
+    {% bootstrap_form form %}
+    {% bootstrap_form form2 %}
     <button type="submit" class="save btn btn-primary">Save</button>
 </form>
-
 {% endblock %}
