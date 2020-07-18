@@ -9,18 +9,83 @@ import calendar
 from chores import models, forms
 
 
+class AllChoreListView(generic.ListView):
+    model = models.Chore
+    template_name = 'chores/chore_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'All Chores'
+        return context
+
+    def get_queryset(self):
+        return models.Chore.objects.all().order_by('datetime')
+
+
+class CompletedChoreListView(generic.ListView):
+    model = models.Chore
+    template_name = 'chores/chore_list.html'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = 'Completed Chores'
+        return context
+
+    def get_queryset(self):
+        return models.Chore.objects.filter(completed=True).order_by('datetime')
+
+
 class ChoreListView(generic.ListView):
     model = models.Chore
     template_name = 'chores/chore_list.html'
 
-    def get_queryset(self):
-        if self.kwargs.get('filter', '') == 'all':
-            return models.Chore.objects.all()
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = "Upcoming Chores"
+        return context
 
+    def get_queryset(self):
         now = timezone.now()
         week_later = now + timedelta(days=7)
         return models.Chore.objects.filter(
-            instances__datetime__range=(now, week_later), instances__done=False).order_by('instances__datetime')
+            instances__datetime__range=(now, week_later),
+            instances__done=False
+        ).order_by('instances__datetime')
+
+
+class ChoreInstanceListView(generic.ListView):
+    model = models.ChoreInstance
+    template_name = 'chores/chore_instance_list.html'
+    context_object_name = 'chore_instance_list'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = "Upcoming Chores"
+        return context
+
+    def get_queryset(self):
+        now = timezone.now()
+        week_later = now + timedelta(days=7)
+        return models.ChoreInstance.objects.filter(
+            datetime__range=(now, week_later),
+            done=False
+        ).order_by('datetime')
+
+
+class CompletedChoreInstanceListView(generic.ListView):
+    model = models.ChoreInstance
+    template_name = 'chores/chore_instance_list.html'
+    context_object_name = 'chore_instance_list'
+
+    def get_context_data(self, *, object_list=None, **kwargs):
+        context = super().get_context_data(**kwargs)
+        context['page_title'] = "Completed Iterations"
+        return context
+
+    def get_queryset(self):
+        return models.ChoreInstance.objects.filter(
+            done=True
+        ).order_by('datetime')
 
 
 class ChoreDetailView(generic.DetailView):
@@ -164,8 +229,12 @@ def edit_chore(request, pk):
     chore = get_object_or_404(models.Chore, pk=pk)
     interval = models.ChoreInterval.objects.filter(chore=chore.pk)
     if request.method == 'POST':
-        chore_form = forms.ChoreForm(request.POST)
-        interval_form = forms.ChoreIntervalForm(request.POST)
+        chore_form = forms.ChoreForm(request.POST, instance=chore)
+        if interval:
+            interval_form = forms.ChoreIntervalForm(request.POST, instance=interval[0])
+        else:
+            interval_form = forms.ChoreIntervalForm(request.POST)
+
         if chore_form.is_valid():
             # Chore had intervals but now no longer repeats
             if not chore_form.cleaned_data['repeats'] and chore.chore_intervals.count() > 0:
@@ -173,6 +242,10 @@ def edit_chore(request, pk):
                 models.ChoreInterval.objects.filter(chore=chore.pk).delete()
                 # delete occurrences from old interval that weren't marked complete
                 models.ChoreInstance.objects.filter(chore=chore.pk, interval=None, done=False).delete()
+                return redirect('chores:chore_detail', pk=chore.pk)
+
+            elif not chore_form.cleaned_data['repeats']:
+                chore = chore_form.save()
                 return redirect('chores:chore_detail', pk=chore.pk)
 
             # Chore repeats, but the interval has changed
@@ -188,6 +261,11 @@ def edit_chore(request, pk):
                 models.ChoreInstance.objects.bulk_create(chore_instances)
 
                 return redirect('chores:chore_detail', pk=chore.pk)
+
+            else:
+                chore = chore_form.save()
+                return redirect('chores:chore_detail', pk=chore.pk)
+
     else:
         chore_form = forms.ChoreForm(instance=chore)
         if interval:

@@ -1,0 +1,21 @@
+<a class="
+    list-group-item
+    {% if chore_instance.is_past_due %}
+        list-group-item-danger
+    {% elif chore_instance.done %}
+        list-group-item-success
+    {% endif %}
+" href="{% url 'chores:chore_detail' pk=chore_instance.chore.pk %}">
+    <h4 class="list-group-item-heading">
+        {{ chore_instance.chore.name }}
+    </h4>
+    <p class="list-group-item-text">
+        {% if chore_instance.done or chore_instance.is_past_due %}
+        Scheduled <span class="label label-info">{{ chore_instance.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+        {% else %}
+        Coming up on <span class="label label-info">{{ chore_instance.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+        {% endif %}
+        <br>
+        {{ chore_instance.chore.description }}
+    </p>
+</a>

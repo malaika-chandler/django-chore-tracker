@@ -56,5 +56,9 @@ class ChoreInstance(models.Model):
 
     unique_together = ['chore', 'interval', 'datetime']
 
+    @property
+    def is_past_due(self):
+        return timezone.now() > self.datetime
+
     def __str__(self):
         return "{} on {}".format(self.chore, self.datetime)

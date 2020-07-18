@@ -1,0 +1,29 @@
+
+<a class="
+    list-group-item
+    {% if chore.completed %}
+        list-group-item-success
+    {% endif %}
+" href="{% url 'chores:chore_detail' pk=chore.pk %}">
+    <h4 class="list-group-item-heading">
+        {{ chore.name }}
+    </h4>
+    {% if chore.completed %}
+        <span class="label label-success pull-right">Completed</span>
+    {% endif %}
+    <p class="list-group-item-text">
+        {% if chore.completed %}
+            Completed on <span class="label label-info">{{ chore.last_completed_on|date:'l, F jS Y \a\t H:m:s' }}</span>
+        {% elif chore.instances.all.0.datetime < now %}
+            Scheduled for <span class="label label-info">{{ chore.instances.all.0.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+        {% else %}
+            Coming up on <span class="label label-info">{{ chore.instances.all.0.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+        {% endif %}
+
+        {% if chore.last_completed_by %}
+        by {{ chore.last_completed_by.username }}
+        {% endif %}
+        <br>
+        {{ chore.description }}
+    </p>
+</a>

@@ -7,10 +7,6 @@
 </div>
 
 <form method="post">
-    {% if form.errors %}
-    <p>Something has gone wrong.</p>
-    {% endif %}
-
     {% csrf_token %}
     {% bootstrap_form chore_form %}
     <div id="intervalDetails">

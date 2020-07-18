@@ -24,7 +24,7 @@
     <link rel="stylesheet" href="{% static 'css/master.css' %}">
 </head>
 <body>
-<nav class="navbar navbar-default navbar-static-top">
+<nav class="navbar navbar-default navbar-inverse navbar-static-top">
     <div class="container-fluid">
         <!-- Brand and toggle get grouped for better mobile display -->
         <div class="navbar-header">
@@ -44,20 +44,25 @@
         <div class="collapse navbar-collapse" id="base-navbar-collapse-1">
             <ul class="nav navbar-nav">
 <!--                <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Admin</a></li>-->
-                <li><a href="{% url 'chores:total_chore_list' filter='all' %}">See All Chores</a></li>
-<!--                <li><a href="#">Link</a></li>-->
-<!--                <li class="dropdown">-->
-<!--                    <a href="#" class="dropdown-toggle" data-toggle="dropdown" role="button" aria-haspopup="true" aria-expanded="false">Dropdown <span class="caret"></span></a>-->
-<!--                    <ul class="dropdown-menu">-->
-<!--                        <li><a href="#">Action</a></li>-->
-<!--                        <li><a href="#">Another action</a></li>-->
+                <li><a href="{% url 'chores:total_chore_list' %}">See All Chores</a></li>
+                <li><a href="{% url 'chores:chore_list' %}">See Upcoming Chores</a></li>
+<!--                <li><a href="">See Completed Chores</a></li>-->
+                <li class="dropdown">
+                    <a href="#" class="dropdown-toggle"
+                       data-toggle="dropdown" role="button"
+                       aria-haspopup="true" aria-expanded="false">
+                        See Completed <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li><a href="{% url 'chores:completed_chore_list' %}">Chores</a></li>
+                        <li><a href="{% url 'chores:completed_chore_instance_list' %}">Repetitions</a></li>
 <!--                        <li><a href="#">Something else here</a></li>-->
 <!--                        <li role="separator" class="divider"></li>-->
 <!--                        <li><a href="#">Separated link</a></li>-->
 <!--                        <li role="separator" class="divider"></li>-->
 <!--                        <li><a href="#">One more separated link</a></li>-->
-<!--                    </ul>-->
-<!--                </li>-->
+                    </ul>
+                </li>
             </ul>
             <ul class="nav navbar-nav navbar-right">
 <!--                <li><a href="#">Link</a></li>-->

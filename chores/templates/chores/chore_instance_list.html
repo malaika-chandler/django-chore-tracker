@@ -6,8 +6,8 @@
     <h1>{{ page_title }}</h1>
 </div>
 <div class="list-group">
-    {% for chore in chore_list %}
-        {% include 'chores/_chore.html' %}
+    {% for chore_instance in chore_instance_list %}
+        {% include 'chores/_chore_instance.html' %}
     {% endfor %}
 </div>
 {% endblock %}
