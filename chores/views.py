@@ -61,30 +61,67 @@ def generate_instances(chore, chore_interval, count=20):
                 delta = timedelta(days=chore_interval.repeat_custom_interval)
 
             instances = [
-                models.ChoreInstance(chore=chore, interval=chore_interval, datetime=(chore.datetime + (delta * dt)))
-                for dt in range(count + 1)
+                models.ChoreInstance(
+                    chore=chore,
+                    interval=chore_interval,
+                    datetime=(chore.datetime + (delta * dt))
+                )
+                for dt in range(count)
             ]
 
         elif chore_interval.repeat_interval == models.ChoreInterval.IntervalChoice.YEARLY:
             instances = []
-            new_date = datetime.fromtimestamp(chore.datetime)
-            for i in range(count + 1):
-                instances.append(new_date.replace(year=new_date.year + i))
+            new_date = datetime.fromtimestamp(chore.datetime.timestamp(), tz=timezone.get_default_timezone())
+            for i in range(count):
+                new_year = new_date.year + i
+                # Just in case a month doesn't contain enough days, get the max for that month instead
+                # Mainly just for events starting Feb 29 and recurring every year
+                new_day = min(new_date.day, calendar.monthrange(new_year, new_date.month)[1])
+
+                instances.append(
+                    models.ChoreInstance(
+                        chore=chore,
+                        interval=chore_interval,
+                        datetime=(new_date.replace(year=new_year, day=new_day))
+                    )
+                )
 
         elif chore_interval.repeat_interval == models.ChoreInterval.IntervalChoice.MONTHLY:
             instances = []
-            new_date = datetime.fromtimestamp(chore.datetime)
-            for i in range(count + 1):
-                instances.append(new_date.replace(month=new_date.month + i))
+            new_date = datetime.fromtimestamp(chore.datetime.timestamp(), tz=timezone.get_default_timezone())
+            for i in range(count):
+                new_month = new_date.month + i
+                new_year = new_date.year
+                if new_month > 12:
+                    new_year += int(new_month / 12)  # integer division to get proper year increment
+                    # python months go from 1..12, not 0..11
+                    new_month = new_month % 12 if new_month % 12 != 0 else 12
+
+                # Just in case a month doesn't contain enough days, get the max for that month instead
+                new_day = min(new_date.day, calendar.monthrange(new_year, new_month)[1])
+
+                instances.append(
+                    models.ChoreInstance(
+                        chore=chore,
+                        interval=chore_interval,
+                        datetime=(new_date.replace(year=new_year, month=new_month, day=new_day))
+                    )
+                )
 
         elif chore_interval.repeat_interval == models.ChoreInterval.IntervalChoice.WEEK_DAILY:
             instances = []
-            new_date = datetime.fromtimestamp(chore.datetime)
+            new_date = datetime.fromtimestamp(chore.datetime.timestamp(), tz=timezone.get_default_timezone())
             day_count = 0
             while len(instances) < count:
-                next_day = new_date.replace(day=new_date.day + day_count)
+                next_day = new_date + timedelta(days=day_count)
                 if next_day.weekday() in range(5):  # 0 is Monday and 4 is Friday
-                    instances.append(next_day)
+                    instances.append(
+                        models.ChoreInstance(
+                            chore=chore,
+                            interval=chore_interval,
+                            datetime=next_day
+                        )
+                    )
                 day_count += 1
 
         else:
