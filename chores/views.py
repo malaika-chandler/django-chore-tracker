@@ -14,13 +14,13 @@ class ChoreListView(generic.ListView):
     template_name = 'chores/chore_list.html'
 
     def get_queryset(self):
-        # if self.kwargs['']:
+        if self.kwargs.get('filter', '') == 'all':
+            return models.Chore.objects.all()
+
         now = timezone.now()
         week_later = now + timedelta(days=7)
         return models.Chore.objects.filter(
             instances__datetime__range=(now, week_later), instances__done=False).order_by('instances__datetime')
-
-        # return models.Chore.objects.all()
 
 
 class ChoreDetailView(generic.DetailView):

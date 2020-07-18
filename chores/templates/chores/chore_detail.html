@@ -2,24 +2,29 @@
 
 {% block chore_content %}
 
-<div class="jumbotron">
-    <h2>Chore details:</h2>
-    <p>Name: {{ chore.name }}</p>
-    <p>Description: {{ chore.description }}</p>
-    <p>When? {{ chore.datetime|date:'Y-m-d \a\t H:m:s' }}</p>
-    <p>Repeats?: {{ chore.repeats }}</p>
-    {% if chore.repeats %}
-        <h3>Repetitions:</h3>
-        {% for chore_interval in chore.chore_intervals.all %}
-            <p>{{ chore_interval }}</p>
-            <p>Next upcoming: {{ chore.instances.all.0.datetime|date:'Y-m-d \a\t H:m:s' }}</p>
-        {% endfor %}
-    {% endif %}
-</div>
+<div class="page-header">
+    <h2>Details</h2>
+    <small>
+        <a class="btn btn-warning" href="{% url 'chores:chore_edit' pk=chore.pk %}">
+            <span class="glyphicon glyphicon-pencil"></span>
+        </a>
+        <a class="btn btn-danger" href="{% url 'chores:chore_remove' pk=chore.pk %}">
+            <span class="glyphicon glyphicon-remove"></span>
+        </a>
+    </small>
 
-<div class="container">
-    <p><a class="btn btn-warning" href="{% url 'chores:chore_edit' pk=chore.pk %}">Edit</a></p>
-    <p><a class="btn btn-danger" href="{% url 'chores:chore_remove' pk=chore.pk %}">Remove</a></p>
 </div>
+<p>Name: {{ chore.name }}</p>
+<p>Description: {{ chore.description }}</p>
+<p>When? {{ chore.datetime|date:'Y-m-d \a\t H:m:s' }}</p>
+<p>Repeats?: {{ chore.repeats }}</p>
+{% if chore.repeats %}
+    <h3>Repetitions:</h3>
+    {% for chore_interval in chore.chore_intervals.all %}
+        <p>{{ chore_interval }}</p>
+        <p>Next upcoming: {{ chore.instances.all.0.datetime|date:'Y-m-d \a\t H:m:s' }}</p>
+    {% endfor %}
+{% endif %}
+
 
 {% endblock %}

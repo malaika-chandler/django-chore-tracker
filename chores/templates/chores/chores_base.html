@@ -2,12 +2,10 @@
 
 {% block body_block %}
 
-<div class="container">
-    <div class="row">
-        {% block prechore %}{% endblock %}
-        {% block chore_content %}{% endblock %}
-        {% block postchore %}{% endblock %}
-    </div>
+<div class="row">
+    {% block prechore %}{% endblock %}
+    {% block chore_content %}{% endblock %}
+    {% block postchore %}{% endblock %}
 </div>
 
 {% endblock %}

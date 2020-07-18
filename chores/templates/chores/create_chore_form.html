@@ -2,13 +2,15 @@
 {% load bootstrap3 %}
 
 {% block chore_content %}
-<h2>New Chore</h2>
-
-{% if form.errors %}
-<p>Something has gone wrong.</p>
-{% endif %}
+<div class="page-header">
+    <h2>Create A New Chore</h2>
+</div>
 
 <form method="post">
+    {% if form.errors %}
+    <p>Something has gone wrong.</p>
+    {% endif %}
+
     {% csrf_token %}
     {% bootstrap_form chore_form %}
     <div id="intervalDetails">
