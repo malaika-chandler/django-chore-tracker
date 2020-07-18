@@ -7,6 +7,7 @@ class Chore(models.Model):
     name = models.CharField(max_length=256)
     description = models.TextField()
     repeats = models.BooleanField(default=True)
+    datetime = models.DateTimeField(default=timezone.now)
     count_repetitions = models.PositiveIntegerField(default=0)
     completed = models.BooleanField(default=False)
     last_completed_by = models.ForeignKey('auth.User', blank=True, null=True, on_delete=models.DO_NOTHING)
@@ -46,3 +47,15 @@ class ChoreInterval(models.Model):
             interval = 'every {} seconds'.format(self.repeat_custom_interval)
 
         return "Starting {}, repeating {}".format(starts, interval)
+
+
+class ChoreInstance(models.Model):
+    chore = models.ForeignKey(Chore, related_name='instances', on_delete=models.CASCADE)
+    interval = models.ForeignKey(ChoreInterval, related_name='instances', null=True, on_delete=models.SET_NULL)
+    datetime = models.DateTimeField()
+    done = models.BooleanField(default=False)
+
+    unique_together = ['chore', 'interval', 'datetime']
+
+    def __str__(self):
+        return "{} on {}".format(self.chore, self.datetime)
