@@ -40,13 +40,12 @@ class ChoreInterval(models.Model):
     repeat_custom_interval = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
-        starts = self.repeat_start.date().isoformat()
         if self.repeat_interval != ChoreInterval.IntervalChoice.CUSTOM:
             interval = self.repeat_interval
         else:
             interval = 'every {} seconds'.format(self.repeat_custom_interval)
 
-        return "Starting {}, repeating {}".format(starts, interval)
+        return "Repeats {}".format(interval)
 
 
 class ChoreInstance(models.Model):

@@ -6,11 +6,13 @@
     <h2>Chore details:</h2>
     <p>Name: {{ chore.name }}</p>
     <p>Description: {{ chore.description }}</p>
+    <p>When? {{ chore.datetime|date:'Y-m-d \a\t H:m:s' }}</p>
     <p>Repeats?: {{ chore.repeats }}</p>
     {% if chore.repeats %}
         <h3>Repetitions:</h3>
         {% for chore_interval in chore.chore_intervals.all %}
             <p>{{ chore_interval }}</p>
+            <p>Next upcoming: {{ chore.instances.all.0.datetime|date:'Y-m-d \a\t H:m:s' }}</p>
         {% endfor %}
     {% endif %}
 </div>

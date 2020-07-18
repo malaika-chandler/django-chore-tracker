@@ -2,7 +2,7 @@
 
 {% block chore_content %}
 
-<h1>Chores</h1>
+<h1>What's on your list today?</h1>
 <ul>
     {% for chore in chore_list %}
     <h2><li><a href="{% url 'chores:chore_detail' pk=chore.pk %}">{{ chore.name }}</a></li></h2>
