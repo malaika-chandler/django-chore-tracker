@@ -1,0 +1,9 @@
+{% extends 'chores/chores_base.html' %}
+{% block chore_content %}
+<form method="post">
+    {% csrf_token %}
+    <p>Are you sure about that?</p>
+    <input type="submit" class="btn btn-danger" value="Delete {{ object }}">
+    <a class="btn btn-primary" href="{% url 'chores:chore_detail' pk=chore.pk %}">Yikes, get me outta here</a>
+</form>
+{% endblock %}
