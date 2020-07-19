@@ -8,7 +8,7 @@
         panel-default
     {% endif %}
 ">
-    <div class="panel-heading">
+    <div class="panel-heading has-float-button">
         <div class="dropdown pull-right">
             <span class="dropdown-toggle custom-dropdown-toggle" id="dropdownMenu{{ forloop.counter }}"
                   data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -22,6 +22,13 @@
                 <li role="separator" class="divider"></li>
                 <li><a href="#">Delete Occurrence</a></li>
             </ul>
+        </div>
+        <div class="pull-right">
+            <button type="button" data-toggle="tooltip"
+                    data-placement="left" title="Mark instance complete"
+                    class="btn btn-default btn-xs">
+                <span class="glyphicon glyphicon-check text-success"></span>
+            </button>
         </div>
         <h4 class="panel-title">
             <a href="{% url 'chores:chore_detail' pk=chore_instance.chore.pk %}">
