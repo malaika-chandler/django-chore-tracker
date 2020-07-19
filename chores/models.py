@@ -17,8 +17,8 @@ class Chore(models.Model):
         return self.name
 
     @property
-    def has_past_due_occurrences(self):
-        return self.instances.filter(datetime__lt=timezone.now()).count() > 0
+    def past_due_occurrences(self):
+        return self.instances.filter(datetime__lt=timezone.now())
 
     @property
     def next_occurrences(self):
@@ -42,7 +42,7 @@ class ChoreInterval(models.Model):
     class IntervalChoice(models.TextChoices):
         DAILY = 'daily'
         WEEKLY = 'weekly'
-        WEEK_DAILY = 'week daily'
+        WEEK_DAILY = 'week days'
         MONTHLY = 'monthly'
         YEARLY = 'yearly'
         CUSTOM = 'custom'

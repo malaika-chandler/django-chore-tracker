@@ -1,0 +1,33 @@
+<div class="panel {{ panel_class }}">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{ panel_title }}</h4>
+    </div>
+    <div class="panel-body">
+        <div>{{ panel_body_content }}</div>
+    </div>
+    <ul class="list-group list-group-alternating">
+        {% for chore_instance in chore_instance_list %}
+        <li class="list-group-item list-group-float-button">
+            <div class="dropdown pull-right">
+                <span class="dropdown-toggle custom-dropdown-toggle" id="{{ dropdown_menu_id_prefix }}{{ forloop.counter }}"
+                      data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    <span class="glyphicon glyphicon-option-vertical"></span>
+                </span>
+                <ul class="dropdown-menu" aria-labelledby="{{ dropdown_menu_id_prefix }}{{ forloop.counter }}">
+                    <li><a href="#">Edit Instance Date</a></li>
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">Delete Instance</a></li>
+                </ul>
+            </div>
+            <div class="pull-right">
+                <button type="button" data-toggle="tooltip"
+                        data-placement="left" title="Mark instance complete"
+                        class="btn btn-default btn-xs">
+                    <span class="glyphicon glyphicon-check text-success"></span>
+                </button>
+            </div>
+            <div>Due {{ chore_instance.datetime|date:'Y-m-d \a\t H:m:s' }}</div>
+        </li>
+        {% endfor %}
+    </ul>
+</div>

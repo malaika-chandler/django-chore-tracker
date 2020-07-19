@@ -1,5 +1,6 @@
 body {
     background-color: ghostwhite;
+    /* background-color: #eaeaea; */
 }
 
 .custom-dropdown-toggle {
@@ -10,4 +11,16 @@ body {
 
 .brand-image {
     max-height: 20px;
+}
+
+.list-group-alternating .list-group-item:nth-child(even){
+  background-color: #fff;
+}
+
+.list-group-alternating .list-group-item:nth-child(odd){
+  background-color: #f3f3f3;
+}
+
+.list-group-float-button {
+    overflow: hidden;
 }

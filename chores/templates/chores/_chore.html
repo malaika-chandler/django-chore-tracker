@@ -2,7 +2,7 @@
     panel
     {% if chore.completed %}
         panel-success
-    {% elif chore.has_past_due_occurrences %}
+    {% elif chore.past_due_occurrences.count > 0 %}
         panel-danger
     {% else %}
         panel-default
@@ -24,7 +24,7 @@
             </ul>
         </div>
         <h4 class="panel-title">
-            {% if chore.has_past_due_occurrences %}
+            {% if chore.past_due_occurrences.count > 0 %}
             <span class="label label-danger pull-right">Has Past Due Occurrences</span>
             {% elif chore.completed %}
                 <span class="label label-success pull-right">Completed</span>
@@ -35,15 +35,15 @@
             </a>
             <small>
                 {% if chore.completed %}
-                {% if chore.instances.all.count > 0 %}
-                {% with chore.instances|last as last %}
-                Scheduled <span class="label label-info">{{ last.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
-                {% endwith %}
-                {% else %}
-                Scheduled <span class="label label-info">{{ chore.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
-                {% endif %}
+                    {% if chore.instances.all.count > 0 %}
+                        {% with chore.instances|last as last %}
+                        Scheduled <span class="label label-info">{{ last.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                        {% endwith %}
+                    {% else %}
+                        Scheduled <span class="label label-info">{{ chore.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                    {% endif %}
                 {% elif chore.next_occurrences.all.count > 0 %}
-                Coming up on <span class="label label-info">{{ chore.next_occurrences.0.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                    Coming up on <span class="label label-info">{{ chore.next_occurrences.0.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
                 {% endif %}
                 <br>
                 {% if chore.last_completed_by %}

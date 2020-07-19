@@ -4,27 +4,54 @@
 
 <div class="page-header">
     <h2>Details</h2>
-    <small>
-        <a class="btn btn-warning" href="{% url 'chores:chore_edit' pk=chore.pk %}">
-            <span class="glyphicon glyphicon-pencil"></span>
-        </a>
-        <a class="btn btn-danger" href="{% url 'chores:chore_remove' pk=chore.pk %}">
-            <span class="glyphicon glyphicon-remove"></span>
-        </a>
-    </small>
+</div>
+<div class="panel panel-default">
+    <div class="panel-heading">
+        <h4 class="panel-title">{{ chore.name|title }}</h4>
+    </div>
+    <div class="panel-body">
+        <p>{{ chore.description }}</p>
+        <div>
+            When?
+            {% for chore_interval in chore.chore_intervals.all %}
+                {% if chore_interval.repeat_interval == 'custom' %}
+                    Every {{ chore_interval.custom_chore_interval }}
+                    day{{ chore_interval.custom_chore_interval|pluralize }}
+                    starting <span class="label label-info">{{ chore.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                {% else %}
+                    {{ chore_interval.repeat_interval|capfirst }}
+                    starting <span class="label label-info">{{ chore.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                {% endif %}
+            {% empty %}
+                {{ chore.datetime|date:'Y-m-d \a\t H:m:s' }}
+            {% endfor %}
+        </div>
+    </div>
+    <div class="panel-footer">
+        <div>
+            Ongoing?
+            <span class="
+                glyphicon
+                {% if chore.repeats %}
+                    glyphicon-check
+                {% else %}
+                    glyphicon-unchecked
+                {% endif %}
+            "></span>
+        </div>
+    </div>
 </div>
 
-<p>Name: {{ chore.name }}</p>
-<p>Description: {{ chore.description }}</p>
-<p>When? {{ chore.datetime|date:'Y-m-d \a\t H:m:s' }}</p>
-<p>Repeats?: {{ chore.repeats }}</p>
-{% if chore.repeats %}
-    <h3>Repetitions:</h3>
-    {% for chore_interval in chore.chore_intervals.all %}
-        <p>{{ chore_interval }}</p>
-        <p>Next upcoming: {{ chore.instances.all.0.datetime|date:'Y-m-d \a\t H:m:s' }}</p>
-    {% endfor %}
+{% if chore.past_due_occurrences.count > 0 %}
+    {% include 'chores/_chore_detail_instance_list.html' with panel_class='panel-danger' panel_body_content="Here's a list" panel_title='Past Due Occurrences:' dropdown_menu_id_prefix='dropdownMenuPastDue' chore_instance_list=chore.past_due_occurrences.all %}
 {% endif %}
 
+{% include 'chores/_chore_detail_instance_list.html' with panel_class='panel-default' panel_body_content="List of upcoming events" panel_title='Upcoming Occurrences:' dropdown_menu_id_prefix='dropdownMenu' chore_instance_list=chore.next_occurrences.all %}
+
+<script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
 
 {% endblock %}
