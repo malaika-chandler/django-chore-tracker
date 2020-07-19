@@ -16,6 +16,7 @@ class AllChoreListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'All Chores'
+        context['empty_message'] = 'No chores to display!'
         return context
 
     def get_queryset(self):
@@ -29,6 +30,7 @@ class CompletedChoreListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = 'Completed Chores'
+        context['empty_message'] = 'No chores to display!'
         return context
 
     def get_queryset(self):
@@ -42,6 +44,7 @@ class ChoreListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = "Upcoming Chores"
+        context['empty_message'] = 'No upcoming instances to display!'
         return context
 
     def get_queryset(self):
@@ -61,6 +64,7 @@ class ChoreInstanceListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = "Upcoming Chores"
+        context['empty_message'] = 'No upcoming instances to display!'
         return context
 
     def get_queryset(self):
@@ -80,6 +84,7 @@ class CompletedChoreInstanceListView(generic.ListView):
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
         context['page_title'] = "Completed Iterations"
+        context['empty_message'] = "No completed iterations to display"
         return context
 
     def get_queryset(self):

@@ -8,7 +8,7 @@
     {% for chore in chore_list %}
         {% include 'chores/_chore.html' %}
     {% empty %}
-        <p>No completed chores!</p>
+        <p>{{ empty_message }}</p>
     {% endfor %}
 </div>
 {% endblock %}
