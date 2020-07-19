@@ -6,8 +6,17 @@
     <h2>Details</h2>
 </div>
 <div class="panel panel-default">
-    <div class="panel-heading">
-        <h4 class="panel-title">{{ chore.name|title }}</h4>
+    <div class="panel-heading has-float-button">
+        <h4 class="panel-title">
+            {{ chore.name|title }}
+            <div class="pull-right">
+                <button type="button" data-toggle="tooltip"
+                        data-placement="left" title="Edit Chore Details"
+                        class="btn btn-warning btn-xs">
+                    <span class="glyphicon glyphicon-pencil"></span>
+                </button>
+            </div>
+        </h4>
     </div>
     <div class="panel-body">
         <p>{{ chore.description }}</p>
