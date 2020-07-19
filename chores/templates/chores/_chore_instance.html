@@ -1,21 +1,40 @@
-<a class="
-    list-group-item
-    {% if chore_instance.is_past_due %}
-        list-group-item-danger
-    {% elif chore_instance.done %}
-        list-group-item-success
+<div class="
+    panel
+    {% if chore_instance.done %}
+        panel-success
+    {% elif chore_instance.is_past_due %}
+        panel-danger
+    {% else %}
+        panel-default
     {% endif %}
-" href="{% url 'chores:chore_detail' pk=chore_instance.chore.pk %}">
-    <h4 class="list-group-item-heading">
-        {{ chore_instance.chore.name }}
-    </h4>
-    <p class="list-group-item-text">
-        {% if chore_instance.done or chore_instance.is_past_due %}
-        Scheduled <span class="label label-info">{{ chore_instance.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
-        {% else %}
-        Coming up on <span class="label label-info">{{ chore_instance.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
-        {% endif %}
-        <br>
+">
+    <div class="panel-heading">
+        <div class="dropdown pull-right">
+            <span class="dropdown-toggle custom-dropdown-toggle" id="dropdownMenu{{ forloop.counter }}"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="glyphicon glyphicon-option-vertical"></span>
+            </span>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ forloop.counter }}">
+                <li><a href="{% url 'chores:chore_detail' pk=chore_instance.chore.pk %}">Go to Chore Details</a></li>
+                {% if not chore_instance.done %}
+                <li><a href="#">Mark Occurrence Complete</a></li>
+                {% endif %}
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Delete Occurrence</a></li>
+            </ul>
+        </div>
+        <h4 class="panel-title">
+            {{ chore_instance.chore.name|title }}
+            <small>
+                {% if chore_instance.done or chore_instance.is_past_due %}
+                Scheduled <span class="label label-info">{{ chore_instance.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                {% else %}
+                Coming up on <span class="label label-info">{{ chore_instance.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                {% endif %}
+            </small>
+        </h4>
+    </div>
+    <div class="panel-body">
         {{ chore_instance.chore.description }}
-    </p>
-</a>
+    </div>
+</div>

@@ -1,29 +1,55 @@
-
-<a class="
-    list-group-item
+<div class="
+    panel
     {% if chore.completed %}
-        list-group-item-success
+        panel-success
+    {% elif chore.has_past_due_occurrences %}
+        panel-danger
+    {% else %}
+        panel-default
     {% endif %}
-" href="{% url 'chores:chore_detail' pk=chore.pk %}">
-    <h4 class="list-group-item-heading">
-        {{ chore.name }}
-    </h4>
-    {% if chore.completed %}
-        <span class="label label-success pull-right">Completed</span>
-    {% endif %}
-    <p class="list-group-item-text">
-        {% if chore.completed %}
-            Completed on <span class="label label-info">{{ chore.last_completed_on|date:'l, F jS Y \a\t H:m:s' }}</span>
-        {% elif chore.instances.all.0.datetime < now %}
-            Scheduled for <span class="label label-info">{{ chore.instances.all.0.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
-        {% else %}
-            Coming up on <span class="label label-info">{{ chore.instances.all.0.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
-        {% endif %}
-
-        {% if chore.last_completed_by %}
-        by {{ chore.last_completed_by.username }}
-        {% endif %}
-        <br>
+">
+    <div class="panel-heading">
+        <div class="dropdown pull-right">
+            <span class="dropdown-toggle custom-dropdown-toggle" id="dropdownMenu{{ forloop.counter }}"
+                  data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                <span class="glyphicon glyphicon-option-vertical"></span>
+            </span>
+            <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ forloop.counter }}">
+                <li><a href="{% url 'chores:chore_detail' pk=chore.pk %}">Go to Chore Details</a></li>
+                {% if not chore.completed %}
+                <li><a href="#">Mark Chore Complete</a></li>
+                {% endif %}
+                <li role="separator" class="divider"></li>
+                <li><a href="#">Delete Chore</a></li>
+            </ul>
+        </div>
+        <h4 class="panel-title">
+            {% if chore.has_past_due_occurrences %}
+            <span class="label label-danger pull-right">Has Past Due Occurrences</span>
+            {% elif chore.completed %}
+                <span class="label label-success pull-right">Completed</span>
+            {% endif %}
+            {{ chore.name|title }}
+            <small>
+                {% if chore.completed %}
+                {% if chore.instances.all.count > 0 %}
+                {% with chore.instances|last as last %}
+                Scheduled <span class="label label-info">{{ last.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                {% endwith %}
+                {% else %}
+                Scheduled <span class="label label-info">{{ chore.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                {% endif %}
+                {% elif chore.next_occurrences.all.count > 0 %}
+                Coming up on <span class="label label-info">{{ chore.next_occurrences.0.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
+                {% endif %}
+                <br>
+                {% if chore.last_completed_by %}
+                Last completed by {{ chore.last_completed_by.username }}
+                {% endif %}
+            </small>
+        </h4>
+    </div>
+    <div class="panel-body">
         {{ chore.description }}
-    </p>
-</a>
+    </div>
+</div>

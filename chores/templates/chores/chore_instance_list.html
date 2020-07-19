@@ -5,9 +5,11 @@
 <div class="page-header">
     <h1>{{ page_title }}</h1>
 </div>
-<div class="list-group">
+<div>
     {% for chore_instance in chore_instance_list %}
         {% include 'chores/_chore_instance.html' %}
+    {% empty %}
+        <p>No completed occurrences!</p>
     {% endfor %}
 </div>
 {% endblock %}

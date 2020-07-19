@@ -16,6 +16,14 @@ class Chore(models.Model):
     def __str__(self):
         return self.name
 
+    @property
+    def has_past_due_occurrences(self):
+        return self.instances.filter(datetime__lt=timezone.now()).count() > 0
+
+    @property
+    def next_occurrences(self):
+        return self.instances.filter(datetime__gte=timezone.now(), done=False).order_by('datetime')
+
     def get_absolute_url(self):
         return reverse("chores:chore_detail", kwargs={'pk': self.pk})
 
@@ -25,7 +33,11 @@ class Chore(models.Model):
 
 class ChoreInterval(models.Model):
 
-    chore = models.ForeignKey(Chore, related_name='chore_intervals', on_delete=models.CASCADE)
+    chore = models.ForeignKey(
+        Chore,
+        related_name='chore_intervals',
+        on_delete=models.CASCADE
+    )
 
     class IntervalChoice(models.TextChoices):
         DAILY = 'daily'
@@ -35,15 +47,18 @@ class ChoreInterval(models.Model):
         YEARLY = 'yearly'
         CUSTOM = 'custom'
 
-    repeat_start = models.DateTimeField(default=timezone.now)
-    repeat_interval = models.CharField(choices=IntervalChoice.choices, max_length=10, default=IntervalChoice.DAILY)
+    repeat_interval = models.CharField(
+        choices=IntervalChoice.choices,
+        max_length=10,
+        default=IntervalChoice.DAILY
+    )
     repeat_custom_interval = models.IntegerField(blank=True, null=True)
 
     def __str__(self):
         if self.repeat_interval != ChoreInterval.IntervalChoice.CUSTOM:
             interval = self.repeat_interval
         else:
-            interval = 'every {} seconds'.format(self.repeat_custom_interval)
+            interval = 'every {} days'.format(self.repeat_custom_interval)
 
         return "Repeats {}".format(interval)
 
@@ -58,7 +73,7 @@ class ChoreInstance(models.Model):
 
     @property
     def is_past_due(self):
-        return timezone.now() > self.datetime
+        return timezone.now() > self.datetime and not self.done
 
     def __str__(self):
         return "{} on {}".format(self.chore, self.datetime)
