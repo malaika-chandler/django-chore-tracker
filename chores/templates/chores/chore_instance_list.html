@@ -7,9 +7,21 @@
 </div>
 <div>
     {% for chore_instance in chore_instance_list %}
+        {% ifchanged chore_instance.datetime|date:'Y-m-d' %}
+            <div class="page-header">
+                <a name="{{ chore_instance.datetime|date:'Y-m-d' }}"></a>
+                {% now "Y-m-d" as todays_date %}
+                {% if chore_instance.datetime|date:'Y-m-d' == todays_date %}
+                    <h4>Today</h4>
+                {% else %}
+                    <h4>{{ chore_instance.datetime|date:'l' }}</h4>
+                {% endif %}
+            </div>
+        {% endifchanged %}
+
         {% include 'chores/_chore_instance.html' %}
     {% empty %}
-        <p>No completed occurrences!</p>
+        <p>{{ empty_message }}</p>
     {% endfor %}
 </div>
 {% endblock %}
