@@ -42,17 +42,19 @@ def populate(n=5):
             datetime=fake_datetime
         )[0]
 
-        fake_interval = random.choice(ChoreInterval.IntervalChoice.choices)[0]
+        new_chore_interval = None
+        if fake_repeats:
+            fake_interval = random.choice(ChoreInterval.IntervalChoice.choices)[0]
 
-        fake_custom_interval = None
-        if fake_interval == ChoreInterval.IntervalChoice.CUSTOM:
-            fake_custom_interval = random.randint(2, 17)
+            fake_custom_interval = None
+            if fake_interval == ChoreInterval.IntervalChoice.CUSTOM:
+                fake_custom_interval = random.randint(2, 17)
 
-        new_chore_interval = ChoreInterval.objects.get_or_create(
-            chore=new_chore,
-            repeat_interval=fake_interval,
-            repeat_custom_interval=fake_custom_interval
-        )[0]
+            new_chore_interval = ChoreInterval.objects.get_or_create(
+                chore=new_chore,
+                repeat_interval=fake_interval,
+                repeat_custom_interval=fake_custom_interval
+            )[0]
 
         ChoreInstance.objects.bulk_create(generate_instances(new_chore, new_chore_interval))
 

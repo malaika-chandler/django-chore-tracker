@@ -178,7 +178,10 @@ def generate_instances(chore, chore_interval, count=20):
         else:
             print("Something has gone wrong with instances")
 
-        return instances
+    else:
+        instances.append(models.ChoreInstance(chore=chore, interval=None, datetime=chore.datetime))
+
+    return instances
 
 
 def submit_new_chore(request):
