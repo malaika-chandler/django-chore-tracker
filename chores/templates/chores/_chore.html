@@ -29,7 +29,10 @@
             {% elif chore.completed %}
                 <span class="label label-success pull-right">Completed</span>
             {% endif %}
-            {{ chore.name|title }}
+            <a href="{% url 'chores:chore_detail' pk=chore.pk %}">
+                <span class="glyphicon glyphicon-link"></span>
+                {{ chore.name|title }}
+            </a>
             <small>
                 {% if chore.completed %}
                 {% if chore.instances.all.count > 0 %}

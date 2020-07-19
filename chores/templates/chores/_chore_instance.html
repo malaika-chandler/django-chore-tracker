@@ -24,7 +24,10 @@
             </ul>
         </div>
         <h4 class="panel-title">
-            {{ chore_instance.chore.name|title }}
+            <a href="{% url 'chores:chore_detail' pk=chore_instance.chore.pk %}">
+                <span class="glyphicon glyphicon-link"></span>
+                {{ chore_instance.chore.name|title }}
+            </a>
             <small>
                 {% if chore_instance.done or chore_instance.is_past_due %}
                 Scheduled <span class="label label-info">{{ chore_instance.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
