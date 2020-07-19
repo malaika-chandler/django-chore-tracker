@@ -93,20 +93,6 @@ class ChoreDetailView(generic.DetailView):
     template_name = 'chores/chore_detail.html'
 
 
-class ChoreCreateView(LoginRequiredMixin, generic.CreateView):
-    model = models.Chore
-    fields = ('name', 'description', 'repeats')
-    redirect_field_name = 'chores/chore_detail.html'
-    template_name = 'chores/create_chore_form.html'
-
-
-class ChoreUpdateView(LoginRequiredMixin, generic.UpdateView):
-    model = models.Chore
-    fields = ('name', 'description', 'repeats')
-    redirect_field_name = 'chores/chore_detail.html'
-    template_name = 'chores/update_chore_form.html'
-
-
 class ChoreDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Chore
     success_url = reverse_lazy("chores:chore_list")
@@ -219,9 +205,10 @@ def submit_new_chore(request):
         chore_form = forms.ChoreForm()
         interval_form = forms.ChoreIntervalForm()
 
-    return render(request, 'chores/create_chore_form.html', {
+    return render(request, 'chores/chore_form.html', {
         'chore_form': chore_form,
-        'interval_form': interval_form
+        'interval_form': interval_form,
+        'page_title': "Create A New Chore",
     })
 
 
@@ -274,7 +261,8 @@ def edit_chore(request, pk):
         else:
             interval_form = forms.ChoreIntervalForm()
 
-    return render(request, 'chores/update_chore_form.html', {
+    return render(request, 'chores/chore_form.html', {
         'chore_form': chore_form,
-        'interval_form': interval_form
+        'interval_form': interval_form,
+        'page_title': "Update Chore",
     })
