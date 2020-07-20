@@ -24,10 +24,10 @@
             </ul>
         </div>
         <h4 class="panel-title">
-            {% if chore.past_due_occurrences.count > 0 %}
+            {% if chore.completed %}
+            <span class="label label-success pull-right">Completed</span>
+            {% elif chore.past_due_occurrences.count > 0 %}
             <span class="label label-danger pull-right">Has Past Due Occurrences</span>
-            {% elif chore.completed %}
-                <span class="label label-success pull-right">Completed</span>
             {% endif %}
             <a href="{% url 'chores:chore_detail' pk=chore.pk %}">
                 <span class="glyphicon glyphicon-link"></span>
@@ -36,7 +36,7 @@
             <small>
                 {% if chore.completed %}
                     {% if chore.instances.all.count > 0 %}
-                        {% with chore.instances|last as last %}
+                        {% with chore.instances.last as last %}
                         Scheduled <span class="label label-info">{{ last.datetime|date:'l, F jS Y \a\t H:m:s' }}</span>
                         {% endwith %}
                     {% else %}
