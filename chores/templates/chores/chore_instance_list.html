@@ -2,10 +2,13 @@
 
 
 {% block chore_content %}
+{% regroup chore_instance_list by datetime as test_list %}
 <div class="page-header">
-    <h1>{{ page_title }}</h1>
+    <h1>{{ page_title }}
+        {{ test_list.count }}</h1>
 </div>
 <div>
+
     {% for chore_instance in chore_instance_list %}
         {% ifchanged chore_instance.datetime|date:'Y-m-d' %}
             <div class="page-header">
@@ -14,7 +17,7 @@
                 {% if chore_instance.datetime|date:'Y-m-d' == todays_date %}
                     <h4>Today</h4>
                 {% else %}
-                    <h4>{{ chore_instance.datetime|date:'l' }}</h4>
+                    <h4>{{ chore_instance.datetime|date:'l' }} the {{ chore_instance.datetime|date:"jS" }}</h4>
                 {% endif %}
             </div>
         {% endifchanged %}
@@ -24,4 +27,45 @@
         <p>{{ empty_message }}</p>
     {% endfor %}
 </div>
+
+<script>
+    $(function () {
+      $('[data-toggle="tooltip"]').tooltip()
+    })
+</script>
+{% endblock %}
+
+{% block postchore %}
+<nav class="toc-sidebar hidden-print hidden-xs hidden-sm affix">
+    <h5 class="toc-sidebar-title">Navigation</h5>
+    <ul class="nav bs-docs-sidenav">
+        {% for chore_instance in chore_instance_list %}
+            {% ifchanged chore_instance.datetime|date:'Y-m-d' %}
+                {% if chore_instance != chore_instance_list.all.0 %}
+                        </li>
+                    </ul>
+                {% endif %}
+                <li>
+                    <div class="page-link">
+                        <h6>
+                            <a id="sideNavItem{{ forloop.counter }}" href="#{{ chore_instance.datetime|date:'Y-m-d' }}">
+                            {% now "Y-m-d" as todays_date %}
+                            {% if chore_instance.datetime|date:'Y-m-d' == todays_date %}
+                            Go to Today
+                            {% else %}
+                            Go to {{ chore_instance.datetime|date:'l' }}
+                            {% endif %}
+                            </a>
+                        </h6>
+                    </div>
+                    <ul class="list-unstyled">
+
+            {% endifchanged %}
+<!--                        <li><h6 class="panel-title"><small>{{ chore_instance.chore.name }}</small></h6></li>-->
+
+        {% empty %}
+        {% endfor %}
+            </ul>
+    </ul>
+</nav>
 {% endblock %}

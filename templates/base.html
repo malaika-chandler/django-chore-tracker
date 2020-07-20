@@ -65,7 +65,7 @@
                 {% if user.is_authenticated %}
                 <li class="nav-item"><a class="nav-link" href="{% url 'chores:chore_new' %}">New Chore</a></li>
                 <li class="nav-item"><a class="nav-link" href="{% url 'logout' %}">Logout</a></li>
-                <li class="nav-item"><a>Welcome, {{ user.username }}</a></li>
+                <li class="nav-item"><p class="navbar-text">Welcome, {{ user.username }}</p></li>
                 {% else %}
                 <li class="nav-item"><a class="nav-link navbar-right" href="{% url 'login' %}"><span>Login</span></a></li>
                 {% endif %}
