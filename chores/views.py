@@ -1,12 +1,16 @@
-from django.shortcuts import render
+from django.shortcuts import render, Http404, redirect, get_object_or_404
 from django.urls import reverse_lazy
-from django.shortcuts import redirect, get_object_or_404
+from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
+from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.views import generic
 from datetime import timedelta, datetime
 import calendar
 from chores import models, forms
+
+
+# User = get_user_model()
 
 
 class AllChoreListView(generic.ListView):
@@ -100,7 +104,75 @@ class ChoreDetailView(generic.DetailView):
 
 class ChoreDeleteView(LoginRequiredMixin, generic.DeleteView):
     model = models.Chore
-    success_url = reverse_lazy("chores:chore_list")
+    success_url = reverse_lazy("chores:total_chore_list")
+
+
+def mark_chore_complete(request, pk):
+    if request.method == 'POST':
+        chore = get_object_or_404(models.Chore, pk=pk)
+
+        # Remove any unfinished instances
+        models.ChoreInstance.objects.filter(chore=chore.pk).delete()
+
+        chore.completed = True
+        chore.last_completed_by = request.user
+        chore.last_completed_on = timezone.now()
+
+        chore.save()
+
+        data = {
+            'success': True
+        }
+        return JsonResponse(data)
+
+    elif request.method == 'GET':
+        chore = get_object_or_404(models.Chore, pk=pk)
+
+        # Remove any unfinished instances
+        models.ChoreInstance.objects.filter(chore=chore.pk, done=False).delete()
+
+        chore.completed = True
+        chore.last_completed_by = request.user
+        chore.last_completed_on = timezone.now()
+
+        chore.save()
+
+        return redirect(request.META['HTTP_REFERER'] or 'chores:chore_detail', pk=chore.pk)
+
+    raise Http404("")
+
+
+def mark_chore_instance_complete(request, pk):
+    if request.method == 'POST':
+        chore_instance = get_object_or_404(models.ChoreInstance, pk=pk)
+        chore_instance.done = True
+        chore_instance.save()
+
+        chore = models.Chore.objects.get(pk=chore_instance.chore.pk)
+        chore.last_completed_by = request.user
+        chore.last_completed_on = timezone.now()
+        chore.count_repetitions += 1
+        chore.save()
+
+        data = {
+            'success': True
+        }
+        return JsonResponse(data)
+
+    raise Http404("")
+
+
+def delete_chore_instance(request, pk):
+    if request.method == 'POST':
+        chore_instance = get_object_or_404(models.ChoreInstance, pk=pk)
+        num_deleted, _ = chore_instance.delete()
+
+        data = {
+            'success': num_deleted > 0
+        }
+        return JsonResponse(data)
+
+    return Http404()
 
 
 def generate_instances(chore, chore_interval, count=20):

@@ -14,18 +14,25 @@
                     <span class="glyphicon glyphicon-option-vertical"></span>
                 </span>
                 <ul class="dropdown-menu" aria-labelledby="{{ dropdown_menu_id_prefix }}{{ forloop.counter }}">
-                    <li><a href="#">Edit Instance Date</a></li>
+                    <li class=""><a href="#">Edit Instance Date</a></li>
                     <li role="separator" class="divider"></li>
-                    <li><a href="#">Delete Instance</a></li>
+                    <li class="instance-delete-btn"
+                        data-pkUrl="{% url 'chores:remove_chore_instance' pk=chore_instance.pk %}">
+                        <a href="">Delete Instance</a>
+                    </li>
                 </ul>
             </div>
+            {% if not chore_instance.done %}
             <div class="pull-right">
                 <button type="button" data-toggle="tooltip"
+                        id="markInstanceCompleteButton{{ forloop.counter }}"
+                        data-pkUrl="{% url 'chores:mark_chore_instance_complete' pk=chore_instance.pk %}"
                         data-placement="top" title="Mark instance complete"
-                        class="btn btn-default btn-xs">
+                        class="btn btn-default btn-xs instance-mark-complete-btn">
                     <span class="glyphicon glyphicon-check text-success"></span>
                 </button>
             </div>
+            {% endif %}
             <div>Due {{ chore_instance.datetime|date:'Y-m-d \a\t H:m:s' }}</div>
         </li>
         {% endfor %}

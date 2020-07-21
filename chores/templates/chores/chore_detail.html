@@ -5,11 +5,21 @@
 <div class="page-header">
     <h2>Details</h2>
 </div>
-<div class="panel panel-default">
+<div class="panel
+            {% if chore.completed %}
+            panel-success
+            {% else %}
+            panel-default
+            {% endif %}
+            ">
     <div class="panel-heading clearfix">
         <h4 class="panel-title">
             {{ chore.name|title }}
+            {% if chore.completed %}
+            <span class="label label-success">Completed!</span>
+            {% endif %}
             <div class="pull-right">
+
                 <a type="button" data-toggle="tooltip"
                    href="{% url 'chores:chore_edit' pk=chore.pk %}"
                    data-placement="top" title="Edit Chore Details"
@@ -22,6 +32,14 @@
                    class="btn btn-danger btn-xs">
                     <span class="glyphicon glyphicon-remove"></span>
                 </a>
+                {% if not chore.completed %}
+                <a type="button" data-toggle="tooltip"
+                   href="{% url 'chores:mark_chore_complete' pk=chore.pk %}"
+                   data-placement="top" title="Mark Chore Complete"
+                   class="btn btn-success btn-xs">
+                    <span class="glyphicon glyphicon-ok"></span>
+                </a>
+                {% endif %}
             </div>
         </h4>
     </div>
@@ -62,12 +80,53 @@
     {% include 'chores/_chore_detail_instance_list.html' with panel_class='panel-danger' panel_body_content="Here's a list" panel_title='Past Due Occurrences:' dropdown_menu_id_prefix='dropdownMenuPastDue' chore_instance_list=chore.past_due_occurrences.all %}
 {% endif %}
 
-{% include 'chores/_chore_detail_instance_list.html' with panel_class='panel-default' panel_body_content="List of upcoming events" panel_title='Upcoming Occurrences:' dropdown_menu_id_prefix='dropdownMenu' chore_instance_list=chore.next_occurrences.all %}
+{% if chore.next_occurrences.count > 0 %}
+    {% include 'chores/_chore_detail_instance_list.html' with panel_class='panel-default' panel_body_content="List of upcoming events" panel_title='Upcoming Occurrences:' dropdown_menu_id_prefix='dropdownMenu' chore_instance_list=chore.next_occurrences.all %}
+{% endif %}
+
+{% if chore.completed_occurrences.count > 0 %}
+    {% include 'chores/_chore_detail_instance_list.html' with panel_class='panel-success' panel_body_content="Yeddin it" panel_title='Completed Occurrences:' dropdown_menu_id_prefix='dropdownMenuCompleted' chore_instance_list=chore.completed_occurrences.all %}
+{% endif %}
 
 <script>
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
     })
+
+    $('.instance-delete-btn').click(function() {
+        const pkUrl = $(this).attr('data-pkUrl');
+        const csrftoken = Cookies.get('csrftoken');
+        $.post({
+            type: "POST",
+            url: pkUrl,
+            headers: {
+                'X-CSRFTOKEN': csrftoken
+            },
+            success: function(data) {
+                if (data.success) {
+                    // remove list object
+                }
+            },
+        });
+    });
+
+    $('.instance-mark-complete-btn').click(function() {
+        const pkUrl = $(this).attr('data-pkUrl');
+        const csrftoken = Cookies.get('csrftoken');
+        $.post({
+            type: "POST",
+            url: pkUrl,
+            headers: {
+                'X-CSRFTOKEN': csrftoken
+            },
+            success: function(data) {
+                if (data.success) {
+                    //
+                }
+            },
+        });
+    });
+
 </script>
 
 {% endblock %}

@@ -18,11 +18,15 @@ class Chore(models.Model):
 
     @property
     def past_due_occurrences(self):
-        return self.instances.filter(datetime__lt=timezone.now())
+        return self.instances.filter(datetime__lt=timezone.now(), done=False)
 
     @property
     def next_occurrences(self):
         return self.instances.filter(datetime__gte=timezone.now(), done=False).order_by('datetime')
+
+    @property
+    def completed_occurrences(self):
+        return self.instances.filter(done=True).order_by('datetime')
 
     def get_absolute_url(self):
         return reverse("chores:chore_detail", kwargs={'pk': self.pk})
