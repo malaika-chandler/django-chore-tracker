@@ -159,6 +159,19 @@ def mark_chore_instance_complete(request, pk):
         }
         return JsonResponse(data)
 
+    elif request.method == 'GET':
+        chore_instance = get_object_or_404(models.ChoreInstance, pk=pk)
+        chore_instance.done = True
+        chore_instance.save()
+
+        chore = models.Chore.objects.get(pk=chore_instance.chore.pk)
+        chore.last_completed_by = request.user
+        chore.last_completed_on = timezone.now()
+        chore.count_repetitions += 1
+        chore.save()
+
+        return redirect(request.META['HTTP_REFERER'] or 'chores:chore_detail', pk=chore.pk)
+
     raise Http404("")
 
 
