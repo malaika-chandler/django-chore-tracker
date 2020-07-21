@@ -60,7 +60,7 @@
                     </a>
                     <ul class="dropdown-menu">
                         <li><a href="{% url 'chores:completed_chore_list' %}">Chores</a></li>
-                        <li><a href="{% url 'chores:completed_chore_instance_list' %}">Repetitions</a></li>
+                        <li><a href="{% url 'chores:completed_chore_instance_list' %}">Occurrences</a></li>
                     </ul>
                 </li>
             </ul>
@@ -78,7 +78,6 @@
 </nav>
 <div class="container">
     {% block body_block %}
-    <!-- Anything outside of this will be inherited if you extend! -->
     {% endblock %}
 </div>
 </body>

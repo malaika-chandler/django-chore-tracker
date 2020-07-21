@@ -87,8 +87,8 @@ class CompletedChoreInstanceListView(generic.ListView):
 
     def get_context_data(self, *, object_list=None, **kwargs):
         context = super().get_context_data(**kwargs)
-        context['page_title'] = "Completed Iterations"
-        context['empty_message'] = "No completed iterations to display"
+        context['page_title'] = "Completed Occurrences"
+        context['empty_message'] = "No completed occurrences to display"
         return context
 
     def get_queryset(self):
