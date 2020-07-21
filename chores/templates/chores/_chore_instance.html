@@ -23,6 +23,7 @@
                 <li><a href="#">Delete Occurrence</a></li>
             </ul>
         </div>
+        {% if not chore_instance.done %}
         <div class="pull-right">
             <button type="button" data-toggle="tooltip"
                     data-placement="top" title="Mark instance complete"
@@ -30,6 +31,7 @@
                 <span class="glyphicon glyphicon-check text-success"></span>
             </button>
         </div>
+        {% endif %}
         <h4 class="panel-title">
             <a href="{% url 'chores:chore_detail' pk=chore_instance.chore.pk %}">
                 <span class="glyphicon glyphicon-link"></span>
