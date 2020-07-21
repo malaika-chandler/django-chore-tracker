@@ -2,10 +2,8 @@
 
 
 {% block chore_content %}
-{% regroup chore_instance_list by datetime as test_list %}
 <div class="page-header">
-    <h1>{{ page_title }}
-        {{ test_list.count }}</h1>
+    <h1>{{ page_title }}</h1>
 </div>
 <div>
 
@@ -17,7 +15,7 @@
                 {% if chore_instance.datetime|date:'Y-m-d' == todays_date %}
                     <h4>Today</h4>
                 {% else %}
-                    <h4>{{ chore_instance.datetime|date:'l' }} the {{ chore_instance.datetime|date:"jS" }}</h4>
+                    <h4>{{ chore_instance.datetime|date:'l, F jS' }}</h4>
                 {% endif %}
             </div>
         {% endifchanged %}
