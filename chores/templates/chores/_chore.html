@@ -16,11 +16,13 @@
             </span>
             <ul class="dropdown-menu" aria-labelledby="dropdownMenu{{ forloop.counter }}">
                 <li><a href="{% url 'chores:chore_detail' pk=chore.pk %}">Go to Chore Details</a></li>
-                {% if not chore.completed %}
-                <li><a href="#">Mark Chore Complete</a></li>
+                {% if user.is_authenticated %}
+                    {% if not chore.completed %}
+                    <li><a href="#">Mark Chore Complete</a></li>
+                    {% endif %}
+                    <li role="separator" class="divider"></li>
+                    <li><a href="#">Delete Chore</a></li>
                 {% endif %}
-                <li role="separator" class="divider"></li>
-                <li><a href="#">Delete Chore</a></li>
             </ul>
         </div>
         <h4 class="panel-title">

@@ -2,15 +2,11 @@ from django.shortcuts import render, Http404, redirect, get_object_or_404
 from django.urls import reverse_lazy
 from django.http import JsonResponse
 from django.contrib.auth.mixins import LoginRequiredMixin
-from django.contrib.auth import get_user_model
 from django.utils import timezone
 from django.views import generic
 from datetime import timedelta, datetime
 import calendar
 from chores import models, forms
-
-
-# User = get_user_model()
 
 
 class AllChoreListView(generic.ListView):

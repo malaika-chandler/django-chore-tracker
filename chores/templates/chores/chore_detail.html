@@ -19,26 +19,27 @@
             <span class="label label-success">Completed!</span>
             {% endif %}
             <div class="pull-right">
-
-                <a type="button" data-toggle="tooltip"
-                   href="{% url 'chores:chore_edit' pk=chore.pk %}"
-                   data-placement="top" title="Edit Chore Details"
-                   class="btn btn-warning btn-xs">
-                    <span class="glyphicon glyphicon-pencil"></span>
-                </a>
-                <a type="button" data-toggle="tooltip"
-                   href="{% url 'chores:chore_remove' pk=chore.pk %}"
-                   data-placement="top" title="Delete Chore"
-                   class="btn btn-danger btn-xs">
-                    <span class="glyphicon glyphicon-remove"></span>
-                </a>
-                {% if not chore.completed %}
-                <a type="button" data-toggle="tooltip"
-                   href="{% url 'chores:mark_chore_complete' pk=chore.pk %}"
-                   data-placement="top" title="Mark Chore Complete"
-                   class="btn btn-success btn-xs">
-                    <span class="glyphicon glyphicon-ok"></span>
-                </a>
+                {% if user.is_authenticated %}
+                    <a type="button" data-toggle="tooltip"
+                       href="{% url 'chores:chore_edit' pk=chore.pk %}"
+                       data-placement="top" title="Edit Chore Details"
+                       class="btn btn-warning btn-xs">
+                        <span class="glyphicon glyphicon-pencil"></span>
+                    </a>
+                    <a type="button" data-toggle="tooltip"
+                       href="{% url 'chores:chore_remove' pk=chore.pk %}"
+                       data-placement="top" title="Delete Chore"
+                       class="btn btn-danger btn-xs">
+                        <span class="glyphicon glyphicon-remove"></span>
+                    </a>
+                    {% if not chore.completed %}
+                    <a type="button" data-toggle="tooltip"
+                       href="{% url 'chores:mark_chore_complete' pk=chore.pk %}"
+                       data-placement="top" title="Mark Chore Complete"
+                       class="btn btn-success btn-xs">
+                        <span class="glyphicon glyphicon-ok"></span>
+                    </a>
+                    {% endif %}
                 {% endif %}
             </div>
         </h4>
@@ -89,6 +90,7 @@
 {% endif %}
 
 <script>
+{% if user.is_authenticated %}
     $(function () {
       $('[data-toggle="tooltip"]').tooltip()
     })
@@ -126,7 +128,7 @@
             },
         });
     });
-
+{% endif %}
 </script>
 
 {% endblock %}
